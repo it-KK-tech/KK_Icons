@@ -3,6 +3,7 @@
 const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+require('dotenv').config();
 
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
@@ -100,7 +101,13 @@ module.exports = async (env, options) => {
             '^/api/streamline': ''
           },
           onProxyReq: (proxyReq, req, res) => {
-            proxyReq.setHeader('x-api-key', 'n1EpiV0UP7ntlqvs.6b90368c05b5b6ff06652a58df63c08d');
+            const apiKey = process.env.STREAMLINE_API_KEY || '';
+            if (!apiKey) {
+              // Log a friendly warning for developers running locally
+              // Do not throw; allow app to run but API calls will fail with 401
+              console.warn('[devServer] STREAMLINE_API_KEY is not set. Set it in a .env file for local dev.');
+            }
+            proxyReq.setHeader('x-api-key', apiKey);
             // Set appropriate accept header based on the request path
             if (req.url.includes('/download/svg')) {
               proxyReq.setHeader('accept', 'application/json');

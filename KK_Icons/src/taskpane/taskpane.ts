@@ -7,7 +7,7 @@
 
 // Streamline API Configuration
 interface StreamlineConfig {
-  apiKey: string;
+  apiKey?: string; // optional in dev when proxy injects header
   baseUrl: string;
 }
 
@@ -48,8 +48,9 @@ interface Icon {
 
 // Configuration
 const streamlineConfig: StreamlineConfig = {
-  apiKey: "n1EpiV0UP7ntlqvs.6b90368c05b5b6ff06652a58df63c08d",
-  baseUrl: "/api/streamline" // Using webpack proxy to bypass CORS
+  // Do not store secrets in client code. In dev, the webpack devServer proxy injects x-api-key
+  // For production, configure your backend/proxy to add the header server-side.
+  baseUrl: "/api/streamline"
 };
 
 let currentIcons: Icon[] = [];
@@ -68,9 +69,7 @@ Office.onReady((info) => {
 // Streamline API Service Functions
 class StreamlineAPIService {
   private static async makeRequest(endpoint: string, params: Record<string, string> = {}): Promise<any> {
-    if (!streamlineConfig.apiKey) {
-      throw new Error("Streamline API key not configured. Please add your API key to streamlineConfig.apiKey");
-    }
+    // In development, the devServer proxy injects the API key header.
 
     // Handle relative URLs for proxy
     let url: URL;
@@ -90,7 +89,7 @@ class StreamlineAPIService {
       const response = await fetch(url.toString(), {
         method: 'GET',
         headers: {
-          'x-api-key': streamlineConfig.apiKey,
+          // Do not attach client-side secret; rely on proxy
           'accept': 'application/json'
         }
       });
@@ -135,9 +134,6 @@ class StreamlineAPIService {
   }
 
   static async downloadIconSVG(iconHash: string): Promise<string> {
-    if (!streamlineConfig.apiKey) {
-      throw new Error("API key not configured");
-    }
 
     // Use proxy for downloads to avoid CORS issues
     let downloadUrl: string;
@@ -151,7 +147,7 @@ class StreamlineAPIService {
 
     const response = await fetch(downloadUrl, {
       headers: {
-        'x-api-key': streamlineConfig.apiKey,
+        // rely on proxy to inject the key
         'accept': 'image/svg+xml'
       }
     });
@@ -189,21 +185,14 @@ function initializeIconFinder() {
 }
 
 function showApiKeyMessage() {
-  if (!streamlineConfig.apiKey) {
-    const iconsGrid = document.getElementById("icons-grid");
-    iconsGrid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #605e5c;">
-        <div style="font-size: 48px; margin-bottom: 16px;">🔑</div>
-        <div style="font-size: 16px; margin-bottom: 8px; font-weight: 600;">API Key Required</div>
-        <div style="font-size: 14px; margin-bottom: 16px;">Please add your Streamline API key to start searching icons.</div>
-        <div style="font-size: 12px; color: #8a8886; line-height: 1.4;">
-          1. Get your API key from <a href="https://streamlinehq.com" target="_blank" style="color: #0078d4;">Streamline HQ</a><br/>
-          2. Add it to the streamlineConfig.apiKey in taskpane.ts<br/>
-          3. Restart the add-in to begin searching
-        </div>
-      </div>
-    `;
-  }
+  // No special message; in dev the proxy handles the key. If requests fail with 401,
+  // developers should set STREAMLINE_API_KEY in .env for the dev server.
+  const iconsGrid = document.getElementById("icons-grid");
+  iconsGrid.innerHTML = `
+    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #605e5c;">
+      <div style="font-size: 16px;">Type a search term to find icons</div>
+    </div>
+  `;
 }
 
 async function performSearch() {
@@ -229,10 +218,7 @@ async function performSearch() {
   iconsGrid.style.display = "none";
 
   try {
-    // Check if API key is configured
-    if (!streamlineConfig.apiKey) {
-      throw new Error("API key not configured");
-    }
+    // No client-side key check; rely on proxy
 
     // Search within streamline-light family
     const response = await StreamlineAPIService.searchFamily('streamline-light', searchTerm, currentPage);

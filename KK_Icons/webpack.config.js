@@ -111,9 +111,12 @@ module.exports = async (env, options) => {
               console.warn('[devServer] STREAMLINE_API_KEY is not set. Set it in a .env file for local dev.');
             }
             proxyReq.setHeader('x-api-key', apiKey);
+            if (apiKey) {
+              console.log('[devServer] Injected x-api-key header for', req.method, req.url);
+            }
             // Set appropriate accept header based on the request path
             if (req.url.includes('/download/svg')) {
-              proxyReq.setHeader('accept', 'application/json');
+              proxyReq.setHeader('accept', 'image/svg+xml');
             } else {
               proxyReq.setHeader('accept', 'application/json');
             }

@@ -3,7 +3,10 @@
 const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+// Load env from CWD and explicitly from this directory to be robust to how the dev server is started
 require('dotenv').config();
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION

@@ -9,7 +9,7 @@ require('dotenv').config();
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const urlDev = "https://localhost:3000/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
+const urlProd = process.env.APP_BASE_URL || "https://your-app-service.azurewebsites.net/"; // Set APP_BASE_URL during CI/build
 
 async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
@@ -27,6 +27,8 @@ module.exports = async (env, options) => {
     },
     output: {
       clean: true,
+      path: path.resolve(__dirname, 'dist'),
+      publicPath: '/',
     },
     resolve: {
       extensions: [".ts", ".html", ".js"],

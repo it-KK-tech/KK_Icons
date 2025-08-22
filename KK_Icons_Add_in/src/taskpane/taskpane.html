@@ -1,0 +1,55 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Icon Finder Add-in</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
+    <link rel="stylesheet" href="https://res-1.cdn.office.net/files/fabric-cdn-prod_20230815.002/office-ui-fabric-core/11.1.0/css/fabric.min.css"/>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+    <header class="icon-finder__header ms-bgColor-neutralLighter">
+        <h1 class="ms-font-xl">Icon Finder</h1>
+    </header>
+    <section id="sideload-msg" class="ms-welcome__main">
+        <h2 class="ms-font-xl">Please <a target="_blank" href="https://learn.microsoft.com/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing">sideload</a> your add-in to see app body.</h2>
+    </section>
+    <main id="app-body" class="icon-finder__main">
+        <div class="search-container">
+            <div class="ms-TextField">
+                <input type="text" id="icon-search" class="ms-TextField-field" placeholder="Search for icons..." />
+                <i class="ms-Icon ms-Icon--Search search-icon"></i>
+            </div>
+        </div>
+        
+
+
+        <div class="results-info">
+            <span id="results-count" class="ms-font-s">Search for icons above</span>
+        </div>
+
+        <div id="icons-grid" class="icons-grid">
+            <!-- Icons will be populated here dynamically -->
+        </div>
+
+        <div id="loading-spinner" class="loading-spinner" style="display: none;">
+            <i class="ms-Icon ms-Icon--ProgressLoopOuter spinning"></i>
+            <span class="ms-font-s">Searching icons...</span>
+        </div>
+    </main>
+</body>
+
+</html>

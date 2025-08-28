@@ -38,7 +38,7 @@ jobs:
         with:
           name: node-app
           # Upload the KK_Icons app folder (contains package.json, server.js, dist/)
-          path: KK_Icons
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -67,3 +67,4 @@ jobs:
           slot-name: 'Production'
           # Deploy the app subfolder that contains package.json/server.js/dist
           package: KK_Icons
+

@@ -8,18 +8,10 @@ const app = express();
 const port = process.env.PORT || 8080;
 const apiTarget = 'https://public-api.streamlinehq.com/v1';
 
-// Log presence (not value) of env at startup
-if (process.env.STREAMLINE_API_KEY) {
-  console.log('[server] STREAMLINE_API_KEY detected (length:', String(process.env.STREAMLINE_API_KEY.length), ')');
-} else {
+// Log presence (not value) of env at startup (one-time)
+if (!process.env.STREAMLINE_API_KEY) {
   console.warn('[server] STREAMLINE_API_KEY is NOT set at process start');
 }
-
-// Basic request logger (prints every incoming request)
-app.use((req, res, next) => {
-  console.log('[server] Incoming', req.method, req.url);
-  next();
-});
 
 // Serve static files from dist
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -41,16 +33,13 @@ app.use('/api/streamline', createProxyMiddleware({
       console.warn('[server] STREAMLINE_API_KEY not set');
     }
     proxyReq.setHeader('x-api-key', apiKey);
-    console.log('[server] Injecting x-api-key for', req.method, req.url, 'keyLen=', apiKey ? String(apiKey.length) : '0');
     if (req.url.includes('/download/svg')) {
       proxyReq.setHeader('accept', 'image/svg+xml');
     } else {
       proxyReq.setHeader('accept', 'application/json');
     }
   },
-  onProxyRes: (proxyRes, req, res) => {
-    console.log('[server] Proxy response', req.method, req.url, '->', proxyRes.statusCode);
-  }
+  // Keep default proxy logging minimal; remove noisy per-request logs
 }));
 
 // Fallback to taskpane.html for root
@@ -58,14 +47,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'taskpane.html'));
 });
 
+app.get('/healthz', (req, res) => res.send('OK'));
 // Health check
 app.get('/healthz', (req, res) => res.send('OK'));
-
-// Simple debug endpoint to confirm env availability without exposing secrets
-app.get('/api/debug', (req, res) => {
-  const len = process.env.STREAMLINE_API_KEY ? String(process.env.STREAMLINE_API_KEY.length) : '0';
-  res.json({ ok: true, keyLen: len });
-});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

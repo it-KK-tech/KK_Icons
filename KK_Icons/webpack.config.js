@@ -4,8 +4,7 @@ const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require('path');
-// Load env from CWD and explicitly from this directory to be robust to how the dev server is started
-require('dotenv').config();
+// Load env from project dir if present (dev only)
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const urlDev = "https://localhost:3000/";
@@ -113,9 +112,6 @@ module.exports = async (env, options) => {
               console.warn('[devServer] STREAMLINE_API_KEY is not set. Set it in a .env file for local dev.');
             }
             proxyReq.setHeader('x-api-key', apiKey);
-            if (apiKey) {
-              console.log('[devServer] Injected x-api-key header for', req.method, req.url);
-            }
             // Set appropriate accept header based on the request path
             if (req.url.includes('/download/svg')) {
               proxyReq.setHeader('accept', 'image/svg+xml');
@@ -123,7 +119,7 @@ module.exports = async (env, options) => {
               proxyReq.setHeader('accept', 'application/json');
             }
           },
-          logLevel: 'debug'
+          logLevel: 'info'
         }
       ]
     },

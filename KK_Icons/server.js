@@ -31,6 +31,10 @@ app.use('/api/streamline', createProxyMiddleware({
   pathRewrite: { '^/api/streamline': '' },
   secure: true,
   logLevel: 'debug',
+  // Also set headers statically to avoid any runtime hook issues
+  headers: {
+    'x-api-key': process.env.STREAMLINE_API_KEY || ''
+  },
   onProxyReq: (proxyReq, req, res) => {
     const apiKey = process.env.STREAMLINE_API_KEY || '';
     if (!apiKey) {

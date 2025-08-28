@@ -15,6 +15,12 @@ if (process.env.STREAMLINE_API_KEY) {
   console.warn('[server] STREAMLINE_API_KEY is NOT set at process start');
 }
 
+// Basic request logger (prints every incoming request)
+app.use((req, res, next) => {
+  console.log('[server] Incoming', req.method, req.url);
+  next();
+});
+
 // Serve static files from dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -37,6 +43,9 @@ app.use('/api/streamline', createProxyMiddleware({
     } else {
       proxyReq.setHeader('accept', 'application/json');
     }
+  },
+  onProxyRes: (proxyRes, req, res) => {
+    console.log('[server] Proxy response', req.method, req.url, '->', proxyRes.statusCode);
   }
 }));
 
@@ -47,6 +56,12 @@ app.get('/', (req, res) => {
 
 // Health check
 app.get('/healthz', (req, res) => res.send('OK'));
+
+// Simple debug endpoint to confirm env availability without exposing secrets
+app.get('/api/debug', (req, res) => {
+  const len = process.env.STREAMLINE_API_KEY ? String(process.env.STREAMLINE_API_KEY.length) : '0';
+  res.json({ ok: true, keyLen: len });
+});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

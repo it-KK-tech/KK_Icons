@@ -6,17 +6,16 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="KK Icons"/>
   <Description DefaultValue="KK Icons for PowerPoint"/>
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  <IconUrl DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/assets/icon-64.png"/>
   <AppDomains>
-    <AppDomain>https://www.contoso.com</AppDomain>
+    <AppDomain>https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Presentation"/>
   </Hosts>
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://localhost:3000/taskpane.html"/>
+    <SourceLocation DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/taskpane.html"/>
   </DefaultSettings>
   <Permissions>ReadWriteDocument</Permissions>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
@@ -62,14 +61,14 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/kk_taskpane.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/kk_taskpane.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/kk_taskpane.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/assets/kk_taskpane.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/assets/kk_taskpane.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/assets/kk_taskpane.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
-        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+        <bt:Url id="Commands.Url" DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://internalreporting-bgbfbtbhedaebyb2.northeurope-01.azurewebsites.net/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!"/>

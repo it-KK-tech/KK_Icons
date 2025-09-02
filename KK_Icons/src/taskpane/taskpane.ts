@@ -120,7 +120,7 @@ class StreamlineAPIService {
     }
   }
 
-  static async searchFamily(familySlug: string, query?: string, page: number = 1, perPage: number = 100): Promise<StreamlineSearchResponse> {
+  static async searchFamily(familySlug: string, query?: string, page: number = 1, perPage: number = 200): Promise<StreamlineSearchResponse> {
     const params: Record<string, string> = {
       page: page.toString(),
       per_page: perPage.toString()
@@ -234,7 +234,7 @@ async function performSearch() {
     }));
 
     displayIcons(currentIcons);
-    updateResultsCount(response.pagination.total, undefined, Math.floor(response.pagination.offset / 100) + 1, Math.ceil(response.pagination.total / 100));
+    updateResultsCount(response.pagination.total, undefined, Math.floor(response.pagination.offset / 200) + 1, Math.ceil(response.pagination.total / 200));
 
   } catch (error) {
     console.error("Search error:", error);

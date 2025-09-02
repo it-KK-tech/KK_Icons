@@ -53,6 +53,9 @@ const streamlineConfig: StreamlineConfig = {
   baseUrl: "/api/streamline"
 };
 
+// Page size for icon search requests
+const ICONS_PAGE_SIZE = 100;
+
 let currentIcons: Icon[] = [];
 let searchTimeout: number;
 let currentPage = 1;
@@ -120,11 +123,19 @@ class StreamlineAPIService {
     }
   }
 
-  static async searchFamily(familySlug: string, query?: string, page: number = 1, perPage: number = 200): Promise<StreamlineSearchResponse> {
+  static async searchFamily(
+    familySlug: string,
+    query?: string,
+    offset: number = 0,
+    limit: number = ICONS_PAGE_SIZE
+  ): Promise<StreamlineSearchResponse> {
     const params: Record<string, string> = {
-      page: page.toString(),
-      per_page: perPage.toString()
+      limit: limit.toString()
     };
+
+    if (offset && offset > 0) {
+      params.offset = offset.toString();
+    }
 
     if (query) {
       params.query = query;
@@ -221,7 +232,12 @@ async function performSearch() {
     // No client-side key check; rely on proxy
 
     // Search within streamline-light family
-    const response = await StreamlineAPIService.searchFamily('streamline-light', searchTerm, currentPage);
+    const response = await StreamlineAPIService.searchFamily(
+      'streamline-light',
+      searchTerm,
+      (currentPage - 1) * ICONS_PAGE_SIZE,
+      ICONS_PAGE_SIZE
+    );
 
     // Convert Streamline icons to internal format
     currentIcons = response.results.map(streamlineIcon => ({
@@ -234,7 +250,12 @@ async function performSearch() {
     }));
 
     displayIcons(currentIcons);
-    updateResultsCount(response.pagination.total, undefined, Math.floor(response.pagination.offset / 200) + 1, Math.ceil(response.pagination.total / 200));
+    updateResultsCount(
+      response.pagination.total,
+      undefined,
+      Math.floor(response.pagination.offset / ICONS_PAGE_SIZE) + 1,
+      Math.ceil(response.pagination.total / ICONS_PAGE_SIZE)
+    );
 
   } catch (error) {
     console.error("Search error:", error);
